@@ -22,7 +22,7 @@ class Cube:
                               d[2], d[5], d[8], 
                               b[2], b[5], b[8], 
                               u[2], u[5], u[8])
-        
+      
     def move_R_prime(self) -> None:
         for _ in range(3):
             self.move_R()
@@ -53,5 +53,98 @@ class Cube:
         #  Up dace, 180° (U2)
         for _ in range(2):
             self.move_U()
+    
+        # Front (F) 
+    def move_F(self) -> None:
+        """Front face, 90° clockwise (F)."""
+        self._rotate_face('B')  # 'B' = blue = Front
+        u, r, d, l = self.faces['W'], self.faces['R'], self.faces['Y'], self.faces['O']
+        (u[6], u[7], u[8],
+         r[0], r[3], r[6],
+         d[2], d[1], d[0],
+         l[8], l[5], l[2]) = (l[8], l[5], l[2],
+                              u[6], u[7], u[8],
+                              r[0], r[3], r[6],
+                              d[2], d[1], d[0])
+
+    def move_F_prime(self) -> None:
+        """Front face, 90° counter-clockwise (F')."""
+        for _ in range(3):
+            self.move_F()
+
+    def move_F2(self) -> None:
+        """Front face, 180° (F2)."""
+        for _ in range(2):
+            self.move_F()
+            
+        # ---------- Back (B) ----------
+    def move_B(self) -> None:
+        """Back face, 90° clockwise (B)."""
+        self._rotate_face('G')  # 'G' = green = Back
+        r, f, l, b = self.faces['R'], self.faces['B'], self.faces['O'], self.faces['G']
+        (r[2], r[5], r[8],
+         f[0], f[1], f[2],
+         l[0], l[3], l[6],
+         b[8], b[7], b[6]) = (l[0], l[3], l[6],
+                              r[2], r[5], r[8],
+                              b[8], b[7], b[6],
+                              f[0], f[1], f[2])
+
+    def move_B_prime(self) -> None:
+        """Back face, 90° counter-clockwise (B')."""
+        for _ in range(3):
+            self.move_B()
+
+    def move_B2(self) -> None:
+        """Back face, 180° (B2)."""
+        for _ in range(2):
+            self.move_B()
+
+    # ---------- Left (L) ----------
+    def move_L(self) -> None:
+        """Left face, 90° clockwise (L)."""
+        self._rotate_face('O')  # 'O' = orange = Left
+        u, f, d, b = self.faces['W'], self.faces['B'], self.faces['Y'], self.faces['G']
+        (u[0], u[3], u[6],
+         f[0], f[3], f[6],
+         d[0], d[3], d[6],
+         b[8], b[5], b[2]) = (b[8], b[5], b[2],
+                              u[0], u[3], u[6],
+                              f[0], f[3], f[6],
+                              d[0], d[3], d[6])
+
+    def move_L_prime(self) -> None:
+        """Left face, 90° counter-clockwise (L')."""
+        for _ in range(3):
+            self.move_L()
+
+    def move_L2(self) -> None:
+        """Left face, 180° (L2)."""
+        for _ in range(2):
+            self.move_L()
+            
+        # ---------- Down (D) ----------
+    def move_D(self) -> None:
+        """Down face, 90° clockwise (D)."""
+        self._rotate_face('Y')  # 'Y' = yellow = Down
+        r, f, l, b = self.faces['R'], self.faces['B'], self.faces['O'], self.faces['G']
+        (r[6], r[7], r[8],
+         f[6], f[7], f[8],
+         l[6], l[7], l[8],
+         b[6], b[7], b[8]) = (b[6], b[7], b[8],
+                              r[6], r[7], r[8],
+                              f[6], f[7], f[8],
+                              l[6], l[7], l[8])
+
+    def move_D_prime(self) -> None:
+        """Down face, 90° counter-clockwise (D')."""
+        for _ in range(3):
+            self.move_D()
+
+    def move_D2(self) -> None:
+        """Down face, 180° (D2)."""
+        for _ in range(2):
+            self.move_D()
+
             
             
