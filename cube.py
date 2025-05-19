@@ -145,6 +145,105 @@ class Cube:
         """Down face, 180° (D2)."""
         for _ in range(2):
             self.move_D()
+            
+    def is_white_cross_solved(self) -> bool:
+    # Check if the white cross is solved on the Down face (Y) and aligned.
+        down = self.faces['Y']
+        if not all(down[i] == 'W' for i in [1, 3, 5, 7]):
+            return False
 
-            
-            
+        # Match adjacent faces: O, B, R, G
+        face_center_matches = [
+            (self.faces['O'][7], self.faces['O'][4]),  # left
+            (self.faces['B'][7], self.faces['B'][4]),  # front
+            (self.faces['R'][7], self.faces['R'][4]),  # right
+            (self.faces['G'][7], self.faces['G'][4]),  # back
+        ]
+        return all(edge == center for edge, center in face_center_matches)
+
+    def solve_white_cross_step(self) -> list[str]:
+        """Try to fix one white edge. Return the move(s) used."""
+        f = self.faces
+
+        # Track last move to prevent infinite repetition
+        self._last_white_edge_move = getattr(self, '_last_white_edge_move', None)
+
+        # === 1. TOP face (W) edges ===
+        if f['W'][1] == 'W':
+            if self._last_white_edge_move == 'B,B':
+                return []
+            self._last_white_edge_move = 'B,B'
+            self.move_B()
+            self.move_B()
+            return ['B', 'B']
+        if f['W'][3] == 'W':
+            if self._last_white_edge_move == 'L,L':
+                return []
+            self._last_white_edge_move = 'L,L'
+            self.move_L()
+            self.move_L()
+            return ['L', 'L']
+        if f['W'][5] == 'W':
+            if self._last_white_edge_move == 'R,R':
+                return []
+            self._last_white_edge_move = 'R,R'
+            self.move_R()
+            self.move_R()
+            return ['R', 'R']
+        if f['W'][7] == 'W':
+            if self._last_white_edge_move == 'F,F':
+                return []
+            self._last_white_edge_move = 'F,F'
+            self.move_F()
+            self.move_F()
+            return ['F', 'F']
+
+        # === 2. Side faces ===
+
+        if f['B'][1] == 'W':
+            if self._last_white_edge_move == 'FF':
+                return []
+            self._last_white_edge_move = 'FF'
+            self.move_F()
+            self.move_F()
+            return ['F', 'F']
+        if f['G'][1] == 'W':
+            if self._last_white_edge_move == 'BB':
+                return []
+            self._last_white_edge_move = 'BB'
+            self.move_B()
+            self.move_B()
+            return ['B', 'B']
+        if f['R'][1] == 'W':
+            if self._last_white_edge_move == 'RR':
+                return []
+            self._last_white_edge_move = 'RR'
+            self.move_R()
+            self.move_R()
+            return ['R', 'R']
+        if f['O'][1] == 'W':
+            if self._last_white_edge_move == 'LL':
+                return []
+            self._last_white_edge_move = 'LL'
+            self.move_L()
+            self.move_L()
+            return ['L', 'L']
+
+        # === 3. Bottom (Y) edges (realign if needed) ===
+        down_edges = [
+            (1, 'B', 7, 'D'),
+            (3, 'O', 7, 'D'),
+            (5, 'R', 7, 'D'),
+            (7, 'G', 7, 'D'),
+        ]
+        for y_idx, side, side_idx, move in down_edges:
+            if f['Y'][y_idx] == 'W' and f[side][side_idx] != f[side][4]:
+                if self._last_white_edge_move == move:
+                    return []
+                self._last_white_edge_move = move
+                self.move_D()
+                return ['D']
+
+        return []  # No white edge found
+
+    
